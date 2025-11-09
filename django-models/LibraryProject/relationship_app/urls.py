@@ -14,12 +14,12 @@ urlpatterns = [
     # Class-based authentication views
     path(
         'login/',
-        LoginView.as_view(template_name='relationship_app/login.html'),
+        LoginView.as_view(template_name='relationship_app/templates/login.html'),
         name='login'
     ),
     path(
         'logout/',
-        LogoutView.as_view(template_name='relationship_app/logout.html'),
+        LogoutView.as_view(template_name='relationship_app/templates/logout.html'),
         name='logout'
     ),
 
