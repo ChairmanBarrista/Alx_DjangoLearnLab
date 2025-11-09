@@ -3,8 +3,11 @@ from django.views.generic.detail import DetailView
 from .models import Book
 from .models import Library
 from django.shortcuts import redirect
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth import login
+from django.contrib.auth import logout
+from django.contrib.auth import authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 
 # Function-Based View (FBV) — List All Books
