@@ -1,22 +1,67 @@
 <!-- blog/templates/blog/post_detail.html -->
 {% extends 'blog/base.html' %}
-{% block title %}{{ post.title }} - Django Blog{% endblock %}
+{% load static %}
 
 {% block content %}
 <article class="post">
   <h2>{{ post.title }}</h2>
   <p class="meta">By {{ post.author.username }} — {{ post.published_date|date:"M d, Y H:i" }}</p>
-
-  <div class="post-content">
-    {{ post.content|linebreaks }}
-  </div>
-
-  <div class="post-actions">
-    {% if user.is_authenticated and user == post.author %}
-      <a href="{% url 'post-update' post.pk %}">Edit</a> |
-      <a href="{% url 'post-delete' post.pk %}">Delete</a>
-    {% endif %}
-    <a href="{% url 'post-list' %}">Back to posts</a>
-  </div>
+  <div class="post-content">{{ post.content|linebreaks }}</div>
 </article>
+
+<hr>
+
+<section id="comments">
+  <h3>Comments ({{ post.comments.count }})</h3>
+
+  {% if post.comments.exists %}
+    <ul class="comments-list">
+      {% for comment in post.comments.all %}
+        <li id="comment-{{ comment.pk }}" class="comment">
+          <p class="comment-meta">
+            <strong>{{ comment.author.username }}</strong>
+            &middot;
+            <small>{{ comment.created_at|date:"M d, Y H:i" }}</small>
+            {% if comment.updated_at and comment.updated_at != comment.created_at %}
+              <small>(edited {{ comment.updated_at|date:"M d, Y H:i" }})</small>
+            {% endif %}
+          </p>
+
+          <div class="comment-content">{{ comment.content|linebreaks }}</div>
+
+          {% if user.is_authenticated and user == comment.author %}
+            <p class="comment-actions">
+              <a href="{% url 'comment-update' comment.pk %}">Edit</a>
+              |
+              <a href="{% url 'comment-delete' comment.pk %}">Delete</a>
+            </p>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No comments yet. Be the first to comment!</p>
+  {% endif %}
+</section>
+
+<hr>
+
+<section id="add-comment">
+  {% if user.is_authenticated %}
+    <h3>Add a comment</h3>
+    <form method="post" action="{% url 'comment-create' post.pk %}">
+      {% csrf_token %}
+      {{ comment_form.non_field_errors }}
+      <div>
+        {{ comment_form.content.errors }}
+        {{ comment_form.content }}
+      </div>
+      <button type="submit">Post comment</button>
+    </form>
+  {% else %}
+    <p><a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to post a comment.</p>
+  {% endif %}
+</section>
+
+<a href="{% url 'post-list' %}">Back to posts</a>
 {% endblock %}
