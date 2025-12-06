@@ -65,3 +65,11 @@
 
 <a href="{% url 'post-list' %}">Back to posts</a>
 {% endblock %}
+
+<p><strong>Tags:</strong>
+{% for tag in post.tags.all %}
+    <a href="{% url 'posts_by_tag' tag.name %}" class="tag">{{ tag.name }}</a>
+{% empty %}
+    No tags.
+{% endfor %}
+</p>
