@@ -1,0 +1,39 @@
+<!-- blog/templates/blog/post_list.html -->
+{% extends 'blog/base.html' %}
+{% block title %}All Posts - Django Blog{% endblock %}
+
+{% block content %}
+<h2>All Posts</h2>
+
+{% if posts %}
+  <ul class="post-list">
+    {% for post in posts %}
+      <li class="post-item">
+        <h3><a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a></h3>
+        <p class="meta">By {{ post.author.username }} — {{ post.published_date|date:"M d, Y H:i" }}</p>
+        <p class="snippet">{{ post.content|truncatechars:200 }}</p>
+        <a href="{% url 'post-detail' post.pk %}">Read more</a>
+        {% if user == post.author %}
+          | <a href="{% url 'post-update' post.pk %}">Edit</a>
+          | <a href="{% url 'post-delete' post.pk %}">Delete</a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  {% if is_paginated %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+{% else %}
+  <p>No posts found.</p>
+{% endif %}
+{% endblock %}
