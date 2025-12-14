@@ -40,3 +40,5 @@ class FeedView(ListAPIView):
         return Post.objects.filter(
             author__in=following_users
         ).order_by('-created_at')
+
+"Post.objects.filter(author__in=following_users).order_by", "permissions.IsAuthenticated"]
