@@ -1,4 +1,4 @@
-""""
+
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -30,7 +30,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
-"""
+
 
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
